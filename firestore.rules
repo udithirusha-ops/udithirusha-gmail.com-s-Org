@@ -1,0 +1,63 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default Deny All
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isValidMessage(data) {
+      return data.keys().hasAll(['id', 'text', 'authorId', 'authorName', 'subject', 'createdAt'])
+        && data.keys().hasOnly(['id', 'text', 'authorId', 'authorName', 'authorPhotoURL', 'subject', 'createdAt'])
+        && data.id is string && data.id.size() > 0 && data.id.size() <= 128
+        && data.text is string && data.text.size() > 0 && data.text.size() <= 2000
+        && data.authorId is string && data.authorId.size() > 0 && data.authorId.size() <= 128
+        && data.authorName is string && data.authorName.size() > 0 && data.authorName.size() <= 256
+        && (!('authorPhotoURL' in data) || (data.authorPhotoURL is string && data.authorPhotoURL.size() <= 1024))
+        && data.subject in ['physics', 'chemistry', 'combined_maths', 'general']
+        && data.createdAt is string && data.createdAt.size() <= 64;
+    }
+
+    // Startup connection validation
+    match /test/connection {
+      allow read: if true;
+    }
+
+    // Real-time study messages
+    match /messages/{messageId} {
+      allow get, list: if true;
+      allow create: if isValidId(messageId)
+        && isValidMessage(request.resource.data)
+        && (isSignedIn() ? request.auth.uid == request.resource.data.authorId : true);
+      allow update: if false;
+      allow delete: if isValidId(messageId) && isSignedIn() && resource.data.authorId == request.auth.uid;
+    }
+
+    // User profile document
+    match /users/{userId} {
+      allow get: if isOwner(userId) && isValidId(userId);
+      allow create: if isOwner(userId) && isValidId(userId);
+      allow update: if isOwner(userId) && isValidId(userId);
+      allow delete: if isOwner(userId);
+
+      // Scoped user subcollections (tasks, marks, pastPaperUnits, courses, assignments, notebooks, notes, countdowns, pomodoroSessions, settings)
+      match /{subcollection}/{docId} {
+        allow get: if isOwner(userId) && isValidId(docId);
+        allow list: if isOwner(userId);
+        allow create, update, delete: if isOwner(userId) && isValidId(docId);
+      }
+    }
+  }
+}

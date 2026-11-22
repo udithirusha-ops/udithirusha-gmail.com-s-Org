@@ -1,0 +1,8 @@
+{
+  "name": "Studiess — Personal Study Workspace",
+  "description": "Offline-ready personal study management system for Physics, Chemistry, and Combined Mathematics with unified All Tasks, Mark Analysis, Past Papers Analysis, Calendar, Notes, and Pomodoro.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

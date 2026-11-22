@@ -1,0 +1,262 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile document",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "email": { "type": "string", "format": "email", "maxLength": 256 },
+        "displayName": { "type": "string", "maxLength": 256 },
+        "photoURL": { "type": "string", "maxLength": 1024 },
+        "createdAt": { "type": "string", "maxLength": 64 },
+        "updatedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "email", "createdAt"]
+    },
+    "Task": {
+      "title": "Task",
+      "description": "Study task entity",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 300 },
+        "category": { "type": "string", "enum": ["physics", "chemistry", "combined_maths", "personal"] },
+        "dueDate": { "type": "string", "maxLength": 20 },
+        "priority": { "type": "string", "enum": ["high", "medium", "low"] },
+        "completed": { "type": "boolean" },
+        "completedAt": { "type": "string", "maxLength": 64 },
+        "progress": { "type": "number" },
+        "notes": { "type": "string", "maxLength": 2000 },
+        "linkedPastPaperId": { "type": "string", "maxLength": 128 },
+        "notionPageId": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "maxLength": 64 },
+        "updatedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "title", "category", "dueDate", "completed"]
+    },
+    "Mark": {
+      "title": "Mark",
+      "description": "Exam and paper mark record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "subject": { "type": "string", "enum": ["physics", "chemistry", "combined_maths"] },
+        "paperName": { "type": "string", "maxLength": 300 },
+        "date": { "type": "string", "maxLength": 20 },
+        "marksObtained": { "type": "number" },
+        "maxMarks": { "type": "number" },
+        "notes": { "type": "string", "maxLength": 2000 },
+        "createdAt": { "type": "string", "maxLength": 64 },
+        "updatedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "subject", "paperName", "date", "marksObtained", "maxMarks"]
+    },
+    "PastPaperUnit": {
+      "title": "PastPaperUnit",
+      "description": "Past paper unit progress item",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "section": { "type": "string", "enum": ["physics", "chemistry", "pure_maths", "applied_maths"] },
+        "title": { "type": "string", "maxLength": 300 },
+        "theory": { "type": "string", "enum": ["Not started", "In progress", "Done"] },
+        "extra": { "type": "boolean" },
+        "tute": { "type": "boolean" },
+        "pastPprsAction": { "type": "string", "enum": ["unconfigured", "log_session", "create_task", "cycle_theory"] },
+        "notes": { "type": "string", "maxLength": 2000 }
+      },
+      "required": ["id", "section", "title", "theory"]
+    },
+    "Course": {
+      "title": "Course",
+      "description": "Academic course entity",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 300 },
+        "courseCode": { "type": "string", "maxLength": 64 },
+        "professor": { "type": "string", "maxLength": 200 },
+        "email": { "type": "string", "maxLength": 256 },
+        "location": { "type": "string", "maxLength": 200 },
+        "time": { "type": "string", "maxLength": 200 },
+        "semester": { "type": "string", "maxLength": 100 },
+        "status": { "type": "string", "enum": ["Active", "Planned", "Completed"] },
+        "syllabus": { "type": "string", "maxLength": 4000 },
+        "summary": { "type": "string", "maxLength": 4000 },
+        "subject": { "type": "string", "enum": ["physics", "chemistry", "combined_maths", "general"] }
+      },
+      "required": ["id", "name"]
+    },
+    "Assignment": {
+      "title": "Assignment",
+      "description": "Assignment or exam deadline",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 300 },
+        "type": { "type": "string", "enum": ["Assignment", "Exam", "Quiz", "Lab", "Practical"] },
+        "status": { "type": "string", "enum": ["Not Started", "In Progress", "Complete"] },
+        "dueDate": { "type": "string", "maxLength": 20 },
+        "courseId": { "type": "string", "maxLength": 128 },
+        "subject": { "type": "string", "enum": ["physics", "chemistry", "combined_maths", "general"] },
+        "notes": { "type": "string", "maxLength": 2000 }
+      },
+      "required": ["id", "title", "type", "status", "dueDate"]
+    },
+    "Notebook": {
+      "title": "Notebook",
+      "description": "Notebook grouping",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 300 },
+        "courseId": { "type": "string", "maxLength": 128 },
+        "subject": { "type": "string", "enum": ["physics", "chemistry", "combined_maths", "general"] },
+        "confidence": { "type": "string", "enum": ["Not Confident", "Somewhat Confident", "Confident"] },
+        "description": { "type": "string", "maxLength": 2000 }
+      },
+      "required": ["id", "title"]
+    },
+    "Note": {
+      "title": "Note",
+      "description": "Study note item",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 300 },
+        "type": { "type": "string", "enum": ["Lecture", "Cornell", "QEC", "Feynman", "Outline"] },
+        "content": { "type": "string", "maxLength": 100000 },
+        "cues": { "type": "string", "maxLength": 20000 },
+        "summary": { "type": "string", "maxLength": 20000 },
+        "question": { "type": "string", "maxLength": 10000 },
+        "evidence": { "type": "string", "maxLength": 50000 },
+        "conclusion": { "type": "string", "maxLength": 20000 },
+        "courseId": { "type": "string", "maxLength": 128 },
+        "notebookId": { "type": "string", "maxLength": 128 },
+        "subject": { "type": "string", "enum": ["physics", "chemistry", "combined_maths", "general"] },
+        "favourite": { "type": "boolean" },
+        "lastReviewedDate": { "type": "string", "maxLength": 20 },
+        "createdAt": { "type": "string", "maxLength": 64 },
+        "updatedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "title", "type"]
+    },
+    "Countdown": {
+      "title": "Countdown",
+      "description": "Exam or milestone countdown item",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 300 },
+        "targetDate": { "type": "string", "maxLength": 20 },
+        "targetTime": { "type": "string", "maxLength": 20 },
+        "subject": { "type": "string", "enum": ["physics", "chemistry", "combined_maths", "general"] }
+      },
+      "required": ["id", "title", "targetDate"]
+    },
+    "PomodoroSession": {
+      "title": "PomodoroSession",
+      "description": "Pomodoro session log",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "subject": { "type": "string", "enum": ["physics", "chemistry", "combined_maths", "personal"] },
+        "mode": { "type": "string", "enum": ["work", "short_break", "long_break"] },
+        "durationMinutes": { "type": "number" },
+        "completedAt": { "type": "string", "maxLength": 64 },
+        "label": { "type": "string", "maxLength": 300 }
+      },
+      "required": ["id", "subject", "mode", "durationMinutes", "completedAt"]
+    },
+    "Settings": {
+      "title": "Settings",
+      "description": "App settings for pomodoro and workspace",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "pomodoroSettings": {
+          "type": "object",
+          "properties": {
+            "workMinutes": { "type": "number" },
+            "shortBreakMinutes": { "type": "number" },
+            "longBreakMinutes": { "type": "number" }
+          }
+        },
+        "notionSync": {
+          "type": "object",
+          "properties": {
+            "lastSyncedAt": { "type": "string" },
+            "mappings": { "type": "object" }
+          }
+        }
+      },
+      "required": ["id"]
+    },
+    "Message": {
+      "title": "Message",
+      "description": "Real-time study message and discussion entry",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "text": { "type": "string", "maxLength": 2000 },
+        "authorId": { "type": "string", "maxLength": 128 },
+        "authorName": { "type": "string", "maxLength": 256 },
+        "authorPhotoURL": { "type": "string", "maxLength": 1024 },
+        "subject": { "type": "string", "enum": ["physics", "chemistry", "combined_maths", "general"] },
+        "createdAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "text", "authorId", "authorName", "subject", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/messages/{messageId}": {
+      "schema": "Message",
+      "description": "Real-time study messages and peer discussion feed"
+    },
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profile document"
+    },
+    "/users/{userId}/tasks/{taskId}": {
+      "schema": "Task",
+      "description": "User's study tasks"
+    },
+    "/users/{userId}/marks/{markId}": {
+      "schema": "Mark",
+      "description": "User's exam and paper marks"
+    },
+    "/users/{userId}/pastPaperUnits/{unitId}": {
+      "schema": "PastPaperUnit",
+      "description": "User's past paper syllabus units"
+    },
+    "/users/{userId}/courses/{courseId}": {
+      "schema": "Course",
+      "description": "User's academic courses"
+    },
+    "/users/{userId}/assignments/{assignmentId}": {
+      "schema": "Assignment",
+      "description": "User's assignments and exams"
+    },
+    "/users/{userId}/notebooks/{notebookId}": {
+      "schema": "Notebook",
+      "description": "User's notebooks"
+    },
+    "/users/{userId}/notes/{noteId}": {
+      "schema": "Note",
+      "description": "User's study notes"
+    },
+    "/users/{userId}/countdowns/{countdownId}": {
+      "schema": "Countdown",
+      "description": "User's exam countdowns"
+    },
+    "/users/{userId}/pomodoroSessions/{sessionId}": {
+      "schema": "PomodoroSession",
+      "description": "User's logged pomodoro sessions"
+    },
+    "/users/{userId}/settings/{settingId}": {
+      "schema": "Settings",
+      "description": "User's app settings"
+    }
+  }
+}
